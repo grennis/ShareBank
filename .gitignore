@@ -12,15 +12,8 @@ xcuserdata/
 *.dSYM
 
 # The project is generated from project.yml by XcodeGen — run `xcodegen generate`.
-# Package.resolved is kept so dependency versions stay pinned.
-*.xcodeproj/*
-!*.xcodeproj/project.xcworkspace/
-*.xcodeproj/project.xcworkspace/*
-!*.xcodeproj/project.xcworkspace/xcshareddata/
-*.xcodeproj/project.xcworkspace/xcshareddata/*
-!*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
-*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/*
-!*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+# That includes the resolved package versions, so Package.resolved is not tracked either.
+*.xcodeproj
 
 # Swift Package Manager
 .swiftpm/
