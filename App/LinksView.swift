@@ -57,7 +57,12 @@ struct LinksView: View {
       ForEach(links) { link in
         // `ShareLink` opens the system share sheet straight from the row tap.
         ShareLink(item: link.url) {
-          LinkRow(link: link)
+          LinkRow(
+            title: link.displayTitle,
+            url: link.url,
+            createdAt: link.createdAt,
+            thumbnailData: link.thumbnailData
+          )
         }
         .buttonStyle(.plain)
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
@@ -115,12 +120,14 @@ struct LinksView: View {
           id: UUID(),
           url: URL(string: "https://www.pointfree.co")!,
           title: "Point-Free",
+          thumbnailData: nil,
           createdAt: Date()
         )
         Link(
           id: UUID(),
           url: URL(string: "https://developer.apple.com/xcode")!,
           title: "Xcode",
+          thumbnailData: nil,
           createdAt: Date().addingTimeInterval(-3600)
         )
       }

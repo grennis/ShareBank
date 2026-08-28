@@ -17,7 +17,7 @@ enum LinkStore {
   /// Saves a link. If the same URL is already waiting (not archived), its timestamp is refreshed
   /// instead of storing a duplicate.
   @discardableResult
-  static func save(url: URL, title: String = "") throws -> Link {
+  static func save(url: URL, title: String = "", thumbnailData: Data? = nil) throws -> Link {
     @Dependency(\.defaultDatabase) var database
     @Dependency(\.date.now) var now
     @Dependency(\.uuid) var uuid
@@ -37,13 +37,23 @@ enum LinkStore {
             if !title.isEmpty {
               $0.title = #bind(title)
             }
+            if let thumbnailData {
+              $0.thumbnailData = #bind(thumbnailData)
+            }
           }
           .execute(db)
       } else {
         id = uuid()
         try Link
           .insert {
-            Link.Draft(id: id, url: url, title: title, createdAt: now, archivedAt: nil)
+            Link.Draft(
+              id: id,
+              url: url,
+              title: title,
+              thumbnailData: thumbnailData,
+              createdAt: now,
+              archivedAt: nil
+            )
           }
           .execute(db)
       }

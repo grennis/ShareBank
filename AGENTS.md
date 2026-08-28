@@ -25,9 +25,12 @@ Bundle IDs `com.innodroid.ShareBank` / `com.innodroid.ShareBank.ShareExtension`,
 
 ## Build and test
 
-Prefer the Xcode MCP tools (`XcodeOpenWorkspace` on `ShareBank.xcodeproj`, then `BuildProject` /
-`RunAllTests`). The scheme is `ShareBank`; the simulator used for verification is iPhone 17 Pro.
-Equivalent CLI:
+Do not run standalone builds or launch the app on a simulator or device for verification. The user
+handles app-level verification. Run the unit test suite when verification is needed; its normal
+test-host build is expected.
+
+Prefer the Xcode MCP tools (`XcodeOpenWorkspace` on `ShareBank.xcodeproj`, then `RunAllTests`). The
+scheme is `ShareBank`; the simulator used for unit tests is iPhone 17 Pro. Equivalent CLI:
 
 ```bash
 xcodebuild -project ShareBank.xcodeproj -scheme ShareBank -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test
@@ -53,6 +56,12 @@ Point-Free stack. Load the matching `pfw-*` skill before working in these areas:
 App Group container, but only when `@Dependency(\.context) == .live` — previews and tests stay
 in memory, which is why `LinkStoreTests` never touches the real database.
 
+**Do not add database migrations during development.** The app has not shipped. Edit the existing
+`Create 'links' table` migration in `Shared/Schema.swift` when the schema changes and rely on
+`eraseDatabaseOnSchemaChange` to reset the debug database on the next launch. Only introduce a new
+additive migration after the user explicitly says the schema has shipped and existing user data
+must be preserved.
+
 **`@FetchAll` cannot see the extension's writes.** GRDB's observation is same-process only. Links
 saved while the app is backgrounded only appear because `LinksView` re-runs its query on
 `scenePhase == .active` (`$links.load(...)`). Any new observed query in the app needs the same
@@ -77,8 +86,9 @@ answered so a dismissed prompt is retried.
 `project.yml`. Adding text or image support means changing that rule and the `UTType.url` extraction
 in `ShareViewController`.
 
-## Verifying on the simulator
+## Manual app verification (user-run)
 
-Unit tests do not cover the share flow — it crosses process boundaries. To check it end to end,
-share a page from Safari, confirm the badge increments, then open the app. Note that the reported
-center of a `List` row is not always a live hit target; tap the row's title text instead.
+Do not perform simulator or device verification. The user handles it. Unit tests do not cover the
+share flow because it crosses process boundaries; when the user verifies it, they share a page from
+Safari, confirm the badge increments, then open the app. The reported center of a `List` row is not
+always a live hit target, so the row's title text is the reliable place to tap.

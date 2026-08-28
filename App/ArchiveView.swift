@@ -19,7 +19,12 @@ struct ArchiveView: View {
         } else {
           List {
             ForEach(links) { link in
-              LinkRow(link: link)
+              LinkRow(
+                title: link.displayTitle,
+                url: link.url,
+                createdAt: link.createdAt,
+                thumbnailData: link.thumbnailData
+              )
                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                   Button(role: .destructive) {
                     delete(link)

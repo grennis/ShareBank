@@ -39,7 +39,12 @@ final class ShareViewController: UIViewController {
     }
 
     do {
-      let link = try LinkStore.save(url: url, title: title)
+      let metadata = await LinkMetadataFetcher.fetch(for: url)
+      let link = try LinkStore.save(
+        url: url,
+        title: metadata?.title ?? title,
+        thumbnailData: metadata?.thumbnailData
+      )
       model.state = .saved(link)
       await BadgeUpdater.refresh()
       try? await Task.sleep(for: .seconds(0.8))

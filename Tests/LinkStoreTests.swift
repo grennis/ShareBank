@@ -44,6 +44,23 @@ private let apple = URL(string: "https://developer.apple.com")!
     }
   }
 
+  @Test func savingSameURLAgainAddsFetchedMetadata() throws {
+    try withTestDatabase {
+      let thumbnailData = Data([0x01, 0x02, 0x03])
+      let first = try LinkStore.save(url: pointFree)
+      let second = try LinkStore.save(
+        url: pointFree,
+        title: "Point-Free",
+        thumbnailData: thumbnailData
+      )
+
+      #expect(first.id == second.id)
+      #expect(second.title == "Point-Free")
+      #expect(second.thumbnailData == thumbnailData)
+      #expect(try LinkStore.unarchivedCount() == 1)
+    }
+  }
+
   @Test func archivingRemovesLinkFromActiveCount() throws {
     try withTestDatabase {
       @Dependency(\.defaultDatabase) var database

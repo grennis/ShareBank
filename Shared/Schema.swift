@@ -8,6 +8,7 @@ struct Link: Identifiable, Hashable {
   let id: UUID
   var url: URL
   var title = ""
+  var thumbnailData: Data?
   var createdAt: Date
   var archivedAt: Date?
 
@@ -65,6 +66,7 @@ extension DependencyValues {
           "id" TEXT PRIMARY KEY NOT NULL ON CONFLICT REPLACE DEFAULT (uuid()),
           "url" TEXT NOT NULL,
           "title" TEXT NOT NULL DEFAULT '',
+          "thumbnailData" BLOB,
           "createdAt" TEXT NOT NULL,
           "archivedAt" TEXT
         ) STRICT
