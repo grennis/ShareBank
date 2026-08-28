@@ -89,7 +89,7 @@ struct LinksView: View {
   }
 
   private func reload() async {
-    await withErrorReporting {
+    _ = await withErrorReporting {
       try await $links.load(
         Link.active.order { $0.createdAt.desc() },
         animation: .default

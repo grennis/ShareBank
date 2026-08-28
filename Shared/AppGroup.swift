@@ -4,6 +4,10 @@ import Foundation
 enum AppGroup {
   static let identifier = "group.com.innodroid.ShareBank"
 
+  /// The CloudKit container the database syncs to. Both processes name it explicitly so they
+  /// cannot disagree about which metadatabase to attach.
+  static let cloudKitContainerIdentifier = "iCloud.com.innodroid.ShareBank"
+
   /// The App Group container, or `nil` when the entitlement is unavailable (previews, tests).
   static var containerURL: URL? {
     FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: identifier)

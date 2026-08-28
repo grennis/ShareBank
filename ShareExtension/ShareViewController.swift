@@ -24,7 +24,7 @@ final class ShareViewController: UIViewController {
     host.didMove(toParent: self)
 
     prepareDependencies {
-      try? $0.bootstrapDatabase()
+      try? $0.bootstrapDatabase(startSyncEngine: false)
     }
 
     Task { await handleSharedItem() }
