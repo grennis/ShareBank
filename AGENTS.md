@@ -18,6 +18,7 @@ xcodegen generate
 | `App/` | ShareBank | SwiftUI UI |
 | `ShareExtension/` | ShareBankShareExtension | `ShareViewController` is the principal class |
 | `Tests/` | ShareBankTests | Swift Testing, hosted by the app |
+| `Tools/` | — | `swift Tools/GenerateAppIcon.swift` redraws the app icon PNGs |
 
 Bundle IDs `com.innodroid.ShareBank` / `com.innodroid.ShareBank.ShareExtension`, App Group
 `group.com.innodroid.ShareBank`, team `S8T7K4M873`, deployment target iOS 18.0.
