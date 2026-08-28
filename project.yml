@@ -1,0 +1,141 @@
+name: ShareBank
+options:
+  bundleIdPrefix: com.innodroid
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+
+packages:
+  SQLiteData:
+    url: https://github.com/pointfreeco/sqlite-data
+    from: "1.11.0"
+  Dependencies:
+    url: https://github.com/pointfreeco/swift-dependencies
+    from: "1.17.0"
+  SwiftNavigation:
+    url: https://github.com/pointfreeco/swift-navigation
+    from: "2.11.0"
+  Sharing:
+    url: https://github.com/pointfreeco/swift-sharing
+    from: "2.9.1"
+  CasePaths:
+    url: https://github.com/pointfreeco/swift-case-paths
+    from: "1.9.2"
+
+settings:
+  base:
+    DEVELOPMENT_TEAM: S8T7K4M873
+    CODE_SIGN_STYLE: Automatic
+    SWIFT_VERSION: "6.0"
+    SWIFT_EMIT_LOC_STRINGS: true
+    ENABLE_USER_SCRIPT_SANDBOXING: true
+
+targets:
+  ShareBank:
+    type: application
+    platform: iOS
+    sources:
+      - path: App
+      - path: Shared
+    entitlements:
+      path: App/ShareBank.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.innodroid.ShareBank
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleDisplayName: ShareBank
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.innodroid.ShareBank
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+    dependencies:
+      - package: SQLiteData
+        product: SQLiteData
+      - package: Dependencies
+        product: Dependencies
+      - package: SwiftNavigation
+        product: SwiftUINavigation
+      - package: Sharing
+        product: Sharing
+      - package: CasePaths
+        product: CasePaths
+      - target: ShareBankShareExtension
+
+  ShareBankShareExtension:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: ShareExtension
+      - path: Shared
+    entitlements:
+      path: ShareExtension/ShareExtension.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.innodroid.ShareBank
+    info:
+      path: ShareExtension/Info.plist
+      properties:
+        CFBundleDisplayName: ShareBank
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.share-services
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ShareViewController
+          NSExtensionAttributes:
+            NSExtensionActivationRule:
+              NSExtensionActivationSupportsWebURLWithMaxCount: 1
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.innodroid.ShareBank.ShareExtension
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+    dependencies:
+      - package: SQLiteData
+        product: SQLiteData
+      - package: Dependencies
+        product: Dependencies
+      - package: Sharing
+        product: Sharing
+
+  ShareBankTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.innodroid.ShareBank.Tests
+        GENERATE_INFOPLIST_FILE: true
+    # No package products are linked here on purpose: the test target picks up SQLiteData and
+    # Dependencies through the host app. Linking them again promotes IssueReporting to a dynamic
+    # framework, and both `xctest-dynamic-overlay` and `swift-issue-reporting` vend a product by
+    # that name, which collides ("Multiple commands produce ... IssueReporting...framework").
+    dependencies:
+      - target: ShareBank
+
+schemes:
+  ShareBank:
+    build:
+      targets:
+        ShareBank: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - ShareBankTests
