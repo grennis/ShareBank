@@ -24,7 +24,7 @@ final class ShareViewController: UIViewController {
     host.didMove(toParent: self)
 
     prepareDependencies {
-      try? $0.bootstrapDatabase(startSyncEngine: false)
+      try? $0.bootstrapDatabase()
     }
 
     Task { await handleSharedItem() }
@@ -46,6 +46,8 @@ final class ShareViewController: UIViewController {
         thumbnailData: metadata?.thumbnailData
       )
       model.state = .saved(link)
+      @Dependency(\.defaultSyncEngine) var syncEngine
+      try? await syncEngine.sendChanges()
       await BadgeUpdater.refresh()
       try? await Task.sleep(for: .seconds(0.8))
     } catch {

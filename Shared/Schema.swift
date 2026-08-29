@@ -22,11 +22,7 @@ struct Link: Identifiable, Hashable {
 }
 
 extension DependencyValues {
-  /// - Parameter startSyncEngine: Whether the CloudKit sync engine should begin syncing right
-  ///   away. The share extension passes `false`: it lives for well under a second, so paying for
-  ///   CloudKit startup there is wasted. Its writes are still recorded by the sync engine's
-  ///   triggers and pushed by the app on its next launch.
-  mutating func bootstrapDatabase(startSyncEngine: Bool = true) throws {
+  mutating func bootstrapDatabase() throws {
     @Dependency(\.context) var context
 
     var configuration = Configuration()
@@ -90,8 +86,7 @@ extension DependencyValues {
       defaultSyncEngine = try SyncEngine(
         for: database,
         tables: Link.self,
-        containerIdentifier: AppGroup.cloudKitContainerIdentifier,
-        startImmediately: startSyncEngine
+        containerIdentifier: AppGroup.cloudKitContainerIdentifier
       )
     }
   }
