@@ -21,6 +21,7 @@ struct ArchiveView: View {
             ForEach(links) { link in
               LinkRow(
                 title: link.displayTitle,
+                content: link.content,
                 url: link.url,
                 createdAt: link.createdAt,
                 thumbnailData: link.thumbnailData

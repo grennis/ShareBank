@@ -24,10 +24,15 @@ private let apple = URL(string: "https://developer.apple.com")!
 @Suite struct LinkStoreTests {
   @Test func savingStoresLink() throws {
     try withTestDatabase {
-      let link = try LinkStore.save(url: pointFree, title: "Point-Free")
+      let link = try LinkStore.save(
+        url: pointFree,
+        title: "Point-Free",
+        content: "Functional programming in Swift"
+      )
 
       #expect(link.url == pointFree)
       #expect(link.title == "Point-Free")
+      #expect(link.content == "Functional programming in Swift")
       #expect(link.archivedAt == nil)
       #expect(try LinkStore.unarchivedCount() == 1)
     }
@@ -51,11 +56,13 @@ private let apple = URL(string: "https://developer.apple.com")!
       let second = try LinkStore.save(
         url: pointFree,
         title: "Point-Free",
+        content: "Functional programming in Swift",
         thumbnailData: thumbnailData
       )
 
       #expect(first.id == second.id)
       #expect(second.title == "Point-Free")
+      #expect(second.content == "Functional programming in Swift")
       #expect(second.thumbnailData == thumbnailData)
       #expect(try LinkStore.unarchivedCount() == 1)
     }

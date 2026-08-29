@@ -31,7 +31,7 @@ final class ShareViewController: UIViewController {
   }
 
   private func handleSharedItem() async {
-    guard let (url, title) = await extractLink() else {
+    guard let sharedLink = await extractLink() else {
       model.state = .failed("ShareBank only accepts links.")
       try? await Task.sleep(for: .seconds(1.6))
       finish()
@@ -39,10 +39,11 @@ final class ShareViewController: UIViewController {
     }
 
     do {
-      let metadata = await LinkMetadataFetcher.fetch(for: url)
+      let metadata = await LinkMetadataFetcher.fetch(for: sharedLink.url)
       let link = try LinkStore.save(
-        url: url,
-        title: metadata?.title ?? title,
+        url: sharedLink.url,
+        title: metadata?.title ?? sharedLink.title,
+        content: sharedLink.content,
         thumbnailData: metadata?.thumbnailData
       )
       model.state = .saved(link)
@@ -57,12 +58,15 @@ final class ShareViewController: UIViewController {
     finish()
   }
 
-  private func extractLink() async -> (URL, String)? {
+  private func extractLink() async -> (url: URL, title: String, content: String)? {
     guard let items = extensionContext?.inputItems as? [NSExtensionItem] else { return nil }
 
     for item in items {
       let title = item.attributedTitle?.string
-        ?? item.attributedContentText?.string
+        .trimmingCharacters(in: .whitespacesAndNewlines)
+        ?? ""
+      let content = item.attributedContentText?.string
+        .trimmingCharacters(in: .whitespacesAndNewlines)
         ?? ""
 
       for provider in item.attachments ?? [] {
@@ -72,7 +76,11 @@ final class ShareViewController: UIViewController {
           options: nil
         )
         if let url = loaded as? URL, url.scheme?.hasPrefix("http") == true {
-          return (url, title.trimmingCharacters(in: .whitespacesAndNewlines))
+          return (
+            url: url,
+            title: title,
+            content: content == title || content == url.absoluteString ? "" : content
+          )
         }
       }
     }

@@ -55,16 +55,29 @@ struct LinksView: View {
   private var list: some View {
     List {
       ForEach(links) { link in
-        // `ShareLink` opens the system share sheet straight from the row tap.
-        ShareLink(item: link.url) {
-          LinkRow(
-            title: link.displayTitle,
-            url: link.url,
-            createdAt: link.createdAt,
-            thumbnailData: link.thumbnailData
-          )
+        HStack(spacing: 8) {
+          SwiftUI.Link(destination: link.url) {
+            LinkRow(
+              title: link.displayTitle,
+              content: link.content,
+              url: link.url,
+              createdAt: link.createdAt,
+              thumbnailData: link.thumbnailData
+            )
+            .frame(maxWidth: .infinity, alignment: .leading)
+          }
+          .buttonStyle(.plain)
+
+          ShareLink(item: link.url) {
+            Label("Share", systemImage: "square.and.arrow.up")
+              .labelStyle(.iconOnly)
+              .font(.title3)
+              .foregroundStyle(.tint)
+              .frame(minWidth: 44, minHeight: 44)
+              .contentShape(.rect)
+          }
+          .buttonStyle(.plain)
         }
-        .buttonStyle(.plain)
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
           Button {
             archive(link)
@@ -120,6 +133,7 @@ struct LinksView: View {
           id: UUID(),
           url: URL(string: "https://www.pointfree.co")!,
           title: "Point-Free",
+          content: "A video series exploring functional programming and Swift.",
           thumbnailData: nil,
           createdAt: Date()
         )

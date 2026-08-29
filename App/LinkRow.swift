@@ -3,6 +3,7 @@ import UIKit
 
 struct LinkRow: View {
   let title: String
+  let content: String
   let url: URL
   let createdAt: Date
   let thumbnailData: Data?
@@ -12,9 +13,19 @@ struct LinkRow: View {
       LinkThumbnail(data: thumbnailData)
 
       VStack(alignment: .leading, spacing: 4) {
-        Text(title)
-          .font(.headline)
-          .lineLimit(1)
+        if !content.isEmpty {
+          Text(content)
+            .font(.headline)
+            .lineLimit(3)
+          Text(title)
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
+            .lineLimit(1)
+        } else {
+          Text(title)
+            .font(.headline)
+            .lineLimit(1)
+        }
         Text(url.absoluteString)
           .font(.caption)
           .foregroundStyle(.secondary)
