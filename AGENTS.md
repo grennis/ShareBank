@@ -38,6 +38,12 @@ xcodebuild -project ShareBank.xcodeproj -scheme ShareBank -destination 'platform
 
 New dependencies need `xcodebuild -resolvePackageDependencies` before the first build.
 
+## Distribution
+
+Publish the app manually from Xcode's Organizer. Do not configure or use Xcode Cloud. For internal
+TestFlight releases, archive the `ShareBank` scheme and choose **TestFlight Internal Only** when
+distributing the archive.
+
 ## Libraries
 
 Point-Free stack. Load the matching `pfw-*` skill before working in these areas:
