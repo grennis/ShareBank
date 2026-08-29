@@ -54,6 +54,7 @@ targets:
         CFBundleDisplayName: ShareBank
         CFBundleShortVersionString: "1.0"
         CFBundleVersion: "1"
+        ITSAppUsesNonExemptEncryption: false
         UIBackgroundModes:
           - remote-notification
         UILaunchScreen: {}
